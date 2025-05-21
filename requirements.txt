@@ -1,0 +1,13 @@
+schedulefree
+folktables
+cython
+POT
+numpy
+pandas
+matplotlib
+scipy
+seaborn
+scikit-learn
+tqdm
+torch
+#k_means_constrained
