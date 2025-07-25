@@ -17,6 +17,7 @@ In those experiments we use the following datasets:
 - Adult census dataset [1]
 - Folktables : Income, Mobility, Travel Time, Employment, Public Coverage [2]
 - Bank Account Fraud [3]
+- CelebA dataset [4]
 
 # Presentation & Organization 
 
@@ -37,7 +38,7 @@ contains the datasets in csv which we used, the csv are naturally too heavy for 
 <summary> src : the folder where we keep the python function within the .py </summary>
       
 - distance : manly different ways to compute the Wasserstein distance or the Kullback-Leibler divergence
-- GEMS3_base_explainer : The file having the entropic projection fonction (with both balanced and proportional case). Original idea from [4].
+- GEMS3_base_explainer : The file having the entropic projection fonction (with both balanced and proportional case). Original idea from [5].
 - mitigation_fct : Function enabling fairness unbaisedness in particular Matching_W(X,S,Ŷ), Replace (S,Ŷ)
 - Gems_Wasserstein : the file having the wasserstein projection and semi-discret algorithm (with balanced and proportional case, as well as with or without 1D-projection)
 - sampling : useful functions regarding sampling and attempts to optimize sampling
@@ -82,7 +83,11 @@ Neural Information Processing Systems.313, https://github.com/socialfoundations/
 Turning the tables: Biased, imbalanced, dynamic tabular datasets for ml evaluation. In Advances318
 in Neural Information Processing Systems, https://www.kaggle.com/datasets/sgpjesus/bank-account-fraud-dataset-neurips-2022.
 
-[4]: François Bachoc, Fabrice Gamboa, Max Halford, Jean-Michel Loubes, Laurent Risser, (2023)
+[4]: Liu, Ziwei and Luo, Ping and Wang, Xiaogang and Tang, Xiaoou, December 2015, 
+Deep Learning Face Attributes in the Wild, in Proceedings of International Conference on Computer Vision (ICCV)
+https://mmlab.ie.cuhk.edu.hk/projects/CelebA.html or https://www.kaggle.com/datasets/jessicali9530/celeba-dataset
+
+[5]: François Bachoc, Fabrice Gamboa, Max Halford, Jean-Michel Loubes, Laurent Risser, (2023)
 Explaining machine learning models using entropic variable projection
 in Information and Inference: A Journal of the IMA, Volume 12, Pages 1686–1715, https://doi.org/10.1093/imaiai/iaad010
 ```
