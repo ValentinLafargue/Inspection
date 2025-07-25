@@ -25,7 +25,7 @@ The github is organised this way :
 <details>
 <summary> Data </summary>
       
-contains the datasets in csv which we used, the csv are naturally too heavy for the Github 50Mo limit, hence they are downloadable here : (hidden for double blind peer review)
+contains the datasets in csv which we used, the csv are naturally too heavy for the Github 50Mo limit, hence they are downloadable here: [drive](https://drive.google.com/drive/folders/1LoHXfnelYLZf0b8Dbo3OqqlaKo-51IPY)
 </details>
 
 <details>
@@ -60,7 +60,7 @@ contains the datasets in csv which we used, the csv are naturally too heavy for 
 <details>
 <summary> Result folder : where we stock the results </summary>
       
-Some of the Results were too heavy for the Github 50Mo limit, hence they are downloadable here: https://drive.google.com/drive/folders/1LoHXfnelYLZf0b8Dbo3OqqlaKo-51IPY
+Some of the Results were too heavy for the Github 50Mo limit, hence they are downloadable here: [drive](https://drive.google.com/drive/folders/1LoHXfnelYLZf0b8Dbo3OqqlaKo-51IPY)
 </details>
 
 
