@@ -39,20 +39,22 @@ contains the datasets in csv which we used, the csv are naturally too heavy for 
       
 - distance : manly different ways to compute the Wasserstein distance or the Kullback-Leibler divergence
 - GEMS3_base_explainer : The file having the entropic projection fonction (with both balanced and proportional case). Original idea from [5].
-- mitigation_fct : Function enabling fairness unbaisedness in particular Matching_W(X,S,Ŷ), Replace (S,Ŷ)
+- mitigation_fct : Function enabling fair-washing, in particular Matching_W(X,S,Ŷ), Replace (S,Ŷ)
 - Gems_Wasserstein : the file having the wasserstein projection and semi-discret algorithm (with balanced and proportional case, as well as with or without 1D-projection)
 - sampling : useful functions regarding sampling and attempts to optimize sampling
 - utils : regular utils file
 </details>
 
 <details>
-<summary> Project : This folder is composed of the notebooks used in the project : from the unbiasedness to the method evaluations and statistical tests. </summary>
+<summary> Project : This folder is composed of the notebooks used in the project : From the training and prediction with torch models along with the fairness evaluation to the fair-washing methods studies and the fraud detection by statistical tests. </summary>
       
-- The notebooks (ADULT/BAF/Folktable)_unbiasedness show how we remove the DI bias (to 0.8) from the dataset with every method, we register every result including the neural network's weight for reproductibility.
+- The notebooks (ADULT/BAF/Folktable)_fairwashing show how we remove the DI bias (to 0.8) from the dataset with every method, we register every result including the neural network's weight for reproductibility.
 - Result Analysis : Notebook where we evaluate the distance from the modified dataset and the original one (for W and KL ; and on (X,S,Ŷ) and (S,Ŷ)) as well as the 5 statistical tests. (as they can take some time to compute, we register the results within the json files dic_threshold.json and dic_test_result.json)
-- Highest_undetected_unbiasing : Notebook where we find to which extent we can increase the Disparate Impact of the original datasets without being detected by any of the 5 tests with the Matching_W(X,S,Ŷ) method. (result in a json file as well : dic_unbiasing.json)
-- W_KL_unbiasedness_result : Notebook where we study the distance of the modified dataset with the original one with different Disparate Impact unbiasing goals.
-- Simulated_exp : Experiences done on a simulated dataset where we compare for instance our optimized method against manual unbiasing method on the Wassserstein distance or the Kullback-Leibler on (S,Ŷ).
+- Highest_undetected_fairwashing : Notebook where we find to which extent we can increase the Disparate Impact of the original datasets without being detected by any of the 5 tests with the Matching_W(X,S,Ŷ) method. (result in a json file as well : dic_unbiasing.json)
+- W_KL_fairwashing_result : Notebook where we study the distance of the modified dataset with the original one with different Disparate Impact fairwashing goals.
+- Simulated_exp : Experiences done on a simulated dataset where we compare for instance our optimized method against manual fair-washing method on the Wassserstein distance or the Kullback-Leibler on (S,Ŷ). 
+- Sampling_size_analysis : Short notebook highlighting the sample size impact on the Adult dataset.
+- CelebA_exp : Notebook where we study the usefulness of our test on non-tabular data, on the CelebA dataset: in particular, we study using statistical tests based on the last hidden layer of CNN classifiers.
 </details>
 
 <details>
