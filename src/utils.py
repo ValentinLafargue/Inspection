@@ -188,11 +188,22 @@ def DI_two_columns(S, Y):
     PY1S1, PY1S0 = Y[S==1].mean(), Y[S==0].mean()
     return min(PY1S1,PY1S0) / max(PY1S1,PY1S0)
 
+def EoO_3_columns(S, pred, Y):
+    S, pred = S[Y==1], pred[Y==1]
+    PY1S1, PY1S0 = pred[S==1].mean(), pred[S==0].mean()
+    return abs(PY1S1 - PY1S0)
+
 def calculate_DI_bins(bins):
     n1, n0 = bins[0] + bins[1], bins[2] + bins[3]
     PY1S1, PY1S0 = bins[0]/n1, bins[2] / n0
     DI =  PY1S0 / PY1S1
     return DI
+
+def calculate_DP_bins(bins):
+    n1, n0 = bins[0] + bins[1], bins[2] + bins[3]
+    PY1S1, PY1S0 = bins[0]/n1, bins[2] / n0
+    DP =  PY1S1 - PY1S0
+    return DP
 
 def DI_fct(arr, S_index, Y_index):
     return calculate_DI_bins(transform_arr_to_bins_exact(arr, S_index = S_index, Y_index = Y_index))
@@ -259,9 +270,6 @@ def transform_arr_to_bins_lambda(arr,
         j = np.argmax(remainders)
         bins[j] += 1
         remainders[j] = 0
-    return bins
-
-    bins = np.array([Y1S1, Y0S1, Y1S0, Y0S0])
     return bins
 
 def transform_arr_to_bins(arr,

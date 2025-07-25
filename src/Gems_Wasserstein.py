@@ -163,16 +163,111 @@ class Stresser_W():
                       CONSTR_REGU = 1):
         inputs = z_t.detach().clone().float()
         inputs.requires_grad = True
-        outputs = - self.network(inputs) * direction
-        grad = torch.autograd.grad(outputs = outputs,
+        outputs = - self.network(inputs) * direction # torch.nn.functional.relu(self.network(inputs) - 0.5) #(( >0.5)*1.)
+        grad_cdt = torch.autograd.grad(outputs = outputs,
                                        inputs =  inputs,
                                        grad_outputs=torch.ones_like(outputs),
                                        create_graph=False,
                                        only_inputs=True)[0]
-        grad_step = 2*(z_t - z_0) + CONSTR_REGU * grad
+        grad_step = 2*(z_t - z_0) + CONSTR_REGU * (grad_cdt)
         return grad_step
-    
+
     def fit_grad(self,
+                 z_0,
+                 prob_threshold,
+                 threshold,
+                 CONSTR_REGU,
+                 threshold_augm_constr,
+                 threshold_lr_cdt,
+                 lr,
+                 stop_condition_threshold,
+                 verbose,
+                 iteration_threshold,
+                 look_alike,
+                 reachable,
+                 ):
+        number_columns = self.X.shape[1]
+        start_pred = self.network(z_0)
+        start_pred_bin = ( start_pred > prob_threshold) * 1.
+        start_direction = 2.* (start_pred_bin.mean() < threshold) - 1
+        direction, pred_bin = start_direction, start_pred_bin
+        stop_cdt = torch.abs( start_pred_bin.mean() - threshold )
+        lr_loop = 0
+        if verbose:
+            print(f'the starting mean is {np.round(start_pred_bin.mean().item(), 3)}, we are {np.round(stop_cdt.item(), 3)} away')
+            print()
+        z_t = z_0
+        iteration = 0
+        former_stop_cdt = stop_cdt
+        while stop_cdt > stop_condition_threshold:
+            assert iteration < iteration_threshold, 'non convergence toward the objective, or too slow'
+            
+            #For the elements which we have already changed their prediction, we do not continue moving them
+            if start_direction == direction:
+                index_to_consider = torch.from_numpy(np.where(pred_bin == start_pred_bin)[0])
+            else:
+                index_to_consider = torch.from_numpy(np.where(pred_bin != start_pred_bin)[0])
+                    
+            z_t_new = z_t.clone()
+            
+            lr_for_loop = lr
+            for i in range(20):
+                grad_step = self.grad_step_fct(z_0 = z_0, 
+                                           z_t = z_t_new,
+                                           direction = direction,
+                                           CONSTR_REGU = CONSTR_REGU,
+                                           )
+                
+                with torch.no_grad():
+                    z_t_new[index_to_consider] = z_t[index_to_consider] - lr * grad_step[index_to_consider]
+                    lr_for_loop = lr_for_loop / 1.2
+                    pred = self.network(z_t_new)
+                    pred_bin = (pred > prob_threshold) * 1.
+                    stop_cdt = torch.abs(pred_bin.mean() - threshold)
+                    z_t_new_copy = z_t_new.clone()
+                    if stop_cdt < stop_condition_threshold:
+                        if look_alike:
+                            for i in range(number_columns):
+                                indexs = torch.argmin(abs(reachable[i].reshape((1,-1)).repeat_interleave(len(z_t_new), axis = 0) - z_t_new[:,i].reshape((-1, 1)).repeat_interleave(len(reachable[i]), axis = 1)),
+                                                    axis = 1)
+                                z_t_new[:,i] = reachable[i][indexs]
+                            pred = self.network(z_t_new)
+                            pred_bin = (pred > prob_threshold) * 1.
+                            stop_cdt = torch.abs(pred_bin.mean() - threshold)
+                        if stop_cdt < stop_condition_threshold:
+                            return z_t_new.detach().numpy(), pred_bin.mean().item()
+
+            if ((former_stop_cdt + threshold_lr_cdt ) < stop_cdt) and (lr_loop < 5) : #and (iteration > 20)
+                CONSTR_REGU = CONSTR_REGU / 1.1
+                #lr = lr / 1.1
+                lr_loop += 1
+                if verbose:
+                    print(f'the former constraint was equal to {np.round(former_stop_cdt.item(), 5)}, the new is {np.round(stop_cdt.item(), 5)}')
+                    print(f'the regularization constraint decreased to {np.round(CONSTR_REGU, 5)}')
+                    #print(f'the learning rate decreased to {np.round(lr, 5)}')
+            else:
+                z_t = z_t_new_copy
+                if torch.abs(stop_cdt - former_stop_cdt) < threshold_augm_constr:
+                    CONSTR_REGU = CONSTR_REGU * 1.2
+                    #lr = lr * 1.2
+                    z_t = z_0
+                    if verbose:
+                        print(f'the former constraint was equal to {np.round(former_stop_cdt.item(), 5)}, the new is {np.round(stop_cdt.item(), 5)}')
+                        print(f'the regularization constraint increased to {np.round(CONSTR_REGU, 5)}')
+                        #print(f'the learning rate increased to {np.round(lr, 5)}')
+                if verbose:
+                    print(f'the contraint value is {np.round(stop_cdt.item(), 5)}')
+                    print(f'the euclidian distance between is {((z_t - z_0)**2).sum(axis = 1).mean()}, \n')
+                former_stop_cdt = stop_cdt
+                lr_loop = 0
+                direction = 2.* (pred_bin.mean() < threshold) - 1
+            iteration +=1
+            
+        if verbose:
+            print(iteration)
+        return z_t_new.detach().numpy(), pred_bin.mean().item()
+    
+    def fit_grad_2(self,
                  z_0,
                  prob_threshold,
                  threshold,
@@ -256,8 +351,9 @@ class Stresser_W():
                      #typ = 'proportional',
                      prob_threshold = 0.5,
                      threshold = 0.8,
-                     CONSTR_REGU = 0.1,
+                     CONSTR_REGU = 1,
                      threshold_augm_constr = 0.01,
+                     stop_condition_threshold = 0.01,
                      threshold_lr_cdt = 0.001,
                      lr = 0.001,
                      iteration_threshold = 100,
@@ -268,22 +364,21 @@ class Stresser_W():
         '''
         This function creates the closest for W2 X counterfactual while mitigating DI bias
         optimization prblm : min |Z - Z_0|^2 <=> W_2(Z,Z_0) s.t. DI(f(Z, S)) > threshold
-        opt rewritten : min W_2(Z,Z_0) + CONSTR_REGU * direction * ( (threshold +/- delta - f(Z) ) for each S=0 or S=1
+        opt rewritten : min W_2(Z,Z_0) + CONSTR_REGU * direction * ( (threshold +/- delta - f(Z) ) for each S==0/1
         
         INPUT:
-        network : torch neural network which we will use for its gradient
+        network : torch neural network
         threshold : define the DI constraint -> between 0 and 1 non included
-        prob_threshold : define the logits threshold : the logits after a sigmoid are within [0,1] and we can instead of choosing the regular 0.5 choose another threshold
         CONSTR_REGU : it defined how much importance we place on the constraint: we want this variable to be as low as possible while respecting the constraint.
-        threshold_augm_constr : threshold which will define when to increase the CONSTR_REGU (identify convergence of the gradient step)
+        threshold_augm_constr, stop_condition_threshold : two threshold which will define when to increase the CONSTR_REGU or the lr
         lr : learning rate of the gradient descent
-        iteration_threshold : number of max iteration -> if after this number of iteration the constraint still is not reached, 
-                              we suggest to either increasing the CONSTR_REGU, this threshold, or to verify that the the network's output comes directly from the inputs (grad != 0) 
-        look_alike : whether the achievable value are only from the 1D achieved values : 1D-projection
+        iteration_threshold : number of max iteration
+        -> if after this number of iteration the constraint still is not reached, we suggest to do another initinialization (or increasing the this threshold)
+        look_alike : whether the achievable value are only from the 1D achieved values
         verbose : whether you prefer to have print showing you what is happening in real time
         
         OUTPUT:
-        None, the result is stored in the self.t which is the translation to do to the network input (to self.X) to unbias the original dataset and have a DI > threshold
+        (The translation done to the network input (to self.X) to mitigate the DI is stored in self.t)
         
         '''
         self.t = np.zeros(self.X.shape)
@@ -300,12 +395,12 @@ class Stresser_W():
             print(f'P(Y=1|S=0) = {np.round(P_S0, 4)}, P(Y=1|S=1) = {np.round(P_S1, 4)}')
             print(f'former DI is {np.round(DI, 3)}, we thus have a difference of {np.round(Diff_DI, 3)} to mitigate')
 
-        if delta_type == 'mean': 
-                #Same mean : proportional case
+        if delta_type == 'mean':
+                #Same mean
                 delta_1_mean = lambda_1 / (1 + (1 + (n1 * lambda_0)/(n0 * lambda_1)) / Diff_DI) / n1
                 delta_0_mean = delta_1_mean
         else:
-            #same number of changement : balanced case
+            #same number of changement
             delta_1 = lambda_1 / (1 + ( n1 / ( n0 * Diff_DI) ) * (1 + lambda_0 / lambda_1 ) ) 
             delta_1_mean = delta_1 / n1
             delta_0_mean = delta_1 / n0
@@ -329,7 +424,7 @@ class Stresser_W():
         for i in range(number_column):
           reachable[i] = torch.from_numpy(np.unique(self.X[:,i])).float()
         
-        z_t_0, new_P_S0 = self.fit_grad(torch.from_numpy(z_0_0).float(),
+        z_t_0, new_P_S0 = self.fit_grad_2(torch.from_numpy(z_0_0).float(),
                                         prob_threshold = prob_threshold,
                                         threshold = n_threshold_0,
                                         CONSTR_REGU = CONSTR_REGU,
@@ -352,7 +447,7 @@ class Stresser_W():
         if verbose:
             print(new_P_S0, n_threshold_0, ((t_0 != 0).sum(axis = 1) > 0).mean())
             
-        z_t_1, new_P_S1 = self.fit_grad(torch.from_numpy(z_0_1).float(),
+        z_t_1, new_P_S1 = self.fit_grad_2(torch.from_numpy(z_0_1).float(),
                                         prob_threshold = prob_threshold,
                                         threshold = n_threshold_1,
                                         CONSTR_REGU = CONSTR_REGU,
@@ -374,6 +469,13 @@ class Stresser_W():
         t_1[pred_mod_and_min] = z_t_1[pred_mod_and_min] - z_0_1[pred_mod_and_min]  
         if verbose:
             print(new_P_S1, n_threshold_1, ((t_1 != 0).sum(axis = 1) > 0).mean())
+        
+        '''X_mod = self.X.copy()
+        X_mod[index_00,:] = X_mod[index_00,:] + t_0
+        X_mod[index_11,:] = X_mod[index_11,:] + t_1
+        pred_mod          = (self.network(torch.from_numpy(X_mod).float()) > prob_threshold)*1.
+        index_pred_mod    = np.where(pred_mod != pred)[0]
+        self.t[index_pred_mod,:] = (X_mod - self.X)[index_pred_mod,:]'''
     
         self.t[index_00,:] = t_0
         self.t[index_11,:] = t_1

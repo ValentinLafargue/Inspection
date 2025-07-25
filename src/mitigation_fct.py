@@ -60,7 +60,8 @@ def Gems_regular_mitigation_arr(arr,
                             S_column_index,
                             Pred_column_index, 
                             DI_target = 0.8,
-                            gd_iterations = 1000):
+                            gd_iterations = 1000,
+                            **kwargs,):
     Gems = obs_stresser(arr)
     Gems.fit({'DI' : [Pred_column_index, 
                       S_column_index, 
@@ -76,7 +77,8 @@ def Gems_fair_mitigation_arr(arr,
                             Y_column_index = None,
                             DI_target = 0.8,
                             gd_iterations = 1000,
-                            delta_type = 'mean'):
+                            delta_type = 'mean',
+                            **kwargs,):
     Gems_fair = obs_stresser_fairness(arr, 
                                       Id_col_Ypred = Pred_column_index, 
                                       Id_col_S = S_column_index, 
@@ -314,6 +316,8 @@ def DI_mitigation_inds_wasserstein(
                               Y_index,
                               threshold = 0.8,
                               verbose = False,
+                              metric_fct_bins = calculate_DI_bins,
+                              sign_threshold = 1,
                               ):
     '''
     Here we seek to mitigate the DI bias by using a different sampling
@@ -332,7 +336,7 @@ def DI_mitigation_inds_wasserstein(
     Y1S1, Y0S1, Y1S0, Y0S0 = len(arr[Y1S1_index]), len(arr[Y0S1_index]), len(arr[Y1S0_index]), len(arr[Y0S0_index])
     bins = np.array([Y1S1, Y0S1, Y1S0, Y0S0], dtype = int)
     
-    DI =  calculate_DI_bins(bins)
+    DI =  metric_fct_bins(bins)
     
     #We need to create the list because dic.keys gives a set in a pseudo-random order
     swap_possible = ['Y0S0 -> Y1S0', 'Y0S0 -> Y0S1', 'Y1S1 -> Y1S0', 'Y1S1 -> Y0S1']
@@ -370,7 +374,7 @@ def DI_mitigation_inds_wasserstein(
     lowest_cost_n = np.zeros(4) - 1e-6
     index_from_n, index_to_n = np.zeros(4), np.zeros(4)
     arr_bins      = np.zeros((4,4))
-    while DI < threshold:
+    while (sign_threshold * DI) < (sign_threshold * threshold):
         if verbose:
             print(DI)
         for count, swap in enumerate(swap_possible):
@@ -378,7 +382,7 @@ def DI_mitigation_inds_wasserstein(
             index_from_n[count], index_to_n[count], lowest_cost_n[count] = dic_swap_cost[swap][index_lowest_cost,:]
     
             arr_bins[count,:] = bins.copy() + dic_swap_impact[swap]
-            DI_n[count] = calculate_DI_bins(arr_bins[count,:])
+            DI_n[count] = metric_fct_bins(arr_bins[count,:])
     
     
         mod_DI_n = DI_n - DI
@@ -404,13 +408,19 @@ def find_sampling_wasserstein_DI(arr,
                                  Y_index,
                                  threshold = 0.8,
                                  verbose = False,
+                                 metric_fct_bins = calculate_DI_bins,
+                                 sign_threshold = 1,
+                                 **kwargs,
                                 ):
                                     
     swaps, dic_number_swap_done = DI_mitigation_inds_wasserstein(arr = arr.copy(),
                                                                  S_index = S_index,
                                                                  Y_index = Y_index,
                                                                  threshold = threshold,
-                                                                 verbose = verbose)
+                                                                 verbose = verbose,
+                                                                 metric_fct_bins = metric_fct_bins,
+                                                                 sign_threshold = sign_threshold,
+                                                                 )
                                                                  
     wass = 0
     new_arr = arr.copy()
@@ -428,7 +438,8 @@ def find_translation_DI(arr,
                         threshold,
                         speed,
                         bool_return_all,
-                        verbose = False):
+                        verbose = False,
+                        **kwargs):
     #Calculate the bins
     Se1_index = arr[:,S_index] == 1
     Ye1_index = arr[:,Y_index] == 1
