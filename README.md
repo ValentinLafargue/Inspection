@@ -37,7 +37,7 @@ contains the datasets in csv which we used, the csv are naturally too heavy for 
 <summary> src : the folder where we keep the python function within the .py </summary>
       
 - distance : manly different ways to compute the Wasserstein distance or the Kullback-Leibler divergence
-- GEMS3_base_explainer : The file having the entropic projection fonction (with both balanced and proportional case)
+- GEMS3_base_explainer : The file having the entropic projection fonction (with both balanced and proportional case). Original idea from [4].
 - mitigation_fct : Function enabling fairness unbaisedness in particular Matching_W(X,S,Ŷ), Replace (S,Ŷ)
 - Gems_Wasserstein : the file having the wasserstein projection and semi-discret algorithm (with balanced and proportional case, as well as with or without 1D-projection)
 - sampling : useful functions regarding sampling and attempts to optimize sampling
@@ -71,14 +71,18 @@ Some of the Results were too heavy for the Github 50Mo limit, hence they are dow
 # References
 
 ```
-[1] : Becker, B. and Kohavi, R. (1996). Adult. UCI Machine Learning Repository. DOI:305
+[1]: Becker, B. and Kohavi, R. (1996). Adult. UCI Machine Learning Repository. DOI:305
 https://doi.org/10.24432/C5XW20.306, https://www.kaggle.com/datasets/uciml/adult-census-income.
 
-[2] : Ding, F., Hardt, M., Miller, J., and Schmidt, L. (2021). Retiring adult: New datasets for fair machine311
+[2]: Ding, F., Hardt, M., Miller, J., and Schmidt, L. (2021). Retiring adult: New datasets for fair machine311
 learning. In Beygelzimer, A., Dauphin, Y., Liang, P., and Vaughan, J. W., editors, Advances in312
 Neural Information Processing Systems.313, https://github.com/socialfoundations/folktables.
 
-[3] : Jesus, S., Pombal, J., Alves, D., Cruz, A., Saleiro, P., Ribeiro, R. P., Gama, J., and Bizarro, P. (2022).317
+[3]: Jesus, S., Pombal, J., Alves, D., Cruz, A., Saleiro, P., Ribeiro, R. P., Gama, J., and Bizarro, P. (2022).317
 Turning the tables: Biased, imbalanced, dynamic tabular datasets for ml evaluation. In Advances318
 in Neural Information Processing Systems, https://www.kaggle.com/datasets/sgpjesus/bank-account-fraud-dataset-neurips-2022.
+
+[4]: François Bachoc, Fabrice Gamboa, Max Halford, Jean-Michel Loubes, Laurent Risser, (2023)
+Explaining machine learning models using entropic variable projection
+in Information and Inference: A Journal of the IMA, Volume 12, Pages 1686–1715, https://doi.org/10.1093/imaiai/iaad010
 ```
