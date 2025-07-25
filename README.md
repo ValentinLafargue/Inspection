@@ -9,7 +9,7 @@ git clone ValentinLafargue/Inspection
 cd Inspection
 python3 -m venv inspection
 source inspection/bin/activate (or ./inspection/Script/activate given your setup)
-pip install -r requierements.txt
+pip install -r requirements.txt
 ```
 
 # Datasets
