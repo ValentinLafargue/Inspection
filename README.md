@@ -5,7 +5,7 @@ For more information about the methods and the choice we took in their implement
 To reproduce the experiments, you can simply clone this repository and install the requierements in a new virtual env as followed:
 
 ```
-git clone (hidden for double blind peer review)
+git clone ValentinLafargue/Inspection
 cd Inspection
 python3 -m venv inspection
 source inspection/bin/activate (or ./inspection/Script/activate given your setup)
