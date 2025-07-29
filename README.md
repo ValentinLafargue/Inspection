@@ -67,8 +67,15 @@ Some of the Results were too heavy for the Github 50Mo limit, hence they are dow
 # Citing illusion of fairness : 
 
 ```
-
-
+@misc{lafargue2025exposingillusionfairnessauditing,
+      title={Exposing the Illusion of Fairness: Auditing Vulnerabilities to Distributional Manipulation Attacks}, 
+      author={Valentin Lafargue and Adriana Laurindo Monteiro and Emmanuelle Claeys and Laurent Risser and Jean-Michel Loubes},
+      year={2025},
+      eprint={2507.20708},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2507.20708}, 
+}
 ```
 
 # References
