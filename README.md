@@ -31,11 +31,11 @@ contains the datasets in csv which we used, the csv are naturally too heavy for 
 <details>
 <summary> Pre-processing </summary>
       
-2 jupyter notebooks which download and / or preprocess the BAF / Folktables dataets into ready to use datasets.
+2 jupyter notebooks which download and/or preprocess the BAF / Folktables dataets into ready to use datasets.
 </details>
 
 <details>
-<summary> src : the folder where we keep the python function within the .py </summary>
+<summary> src : the folder where we keep our python functions </summary>
       
 - distance : manly different ways to compute the Wasserstein distance or the Kullback-Leibler divergence
 - GEMS3_base_explainer : The file having the entropic projection fonction (with both balanced and proportional case). Original idea from [5].
