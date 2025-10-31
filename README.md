@@ -2,7 +2,7 @@ This repository includes the code used to generate the result for our paper resu
 For more information about the methods and the choice we took in their implementation, we invite you to see our paper.
 
 # Install
-To reproduce the experiments, you can simply clone this repository and install the requierements in a new virtual env as followed:
+To reproduce the experiments, you can simply clone this repository and install the requierements in a new virtual env as follows:
 
 ```
 git clone ValentinLafargue/Inspection
