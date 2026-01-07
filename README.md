@@ -63,21 +63,6 @@ contains the datasets in csv which we used, the csv are naturally too heavy for 
 Some of the Results were too heavy for the Github 50Mo limit, hence they are downloadable here: [drive](https://drive.google.com/drive/folders/1LoHXfnelYLZf0b8Dbo3OqqlaKo-51IPY)
 </details>
 
-
-# Citing illusion of fairness : 
-
-```
-@misc{lafargue2025exposingillusionfairnessauditing,
-      title={Exposing the Illusion of Fairness: Auditing Vulnerabilities to Distributional Manipulation Attacks}, 
-      author={Valentin Lafargue and Adriana Laurindo Monteiro and Emmanuelle Claeys and Laurent Risser and Jean-Michel Loubes},
-      year={2025},
-      eprint={2507.20708},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG},
-      url={https://arxiv.org/abs/2507.20708}, 
-}
-```
-
 # References
 
 ```
