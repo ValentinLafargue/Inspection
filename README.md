@@ -66,22 +66,13 @@ Some of the Results were too heavy for the Github 50Mo limit, hence they are dow
 # References
 
 ```
-[1]: Becker, B. and Kohavi, R. (1996). Adult. UCI Machine Learning Repository. DOI:305
-https://doi.org/10.24432/C5XW20.306, https://www.kaggle.com/datasets/uciml/adult-census-income.
+[1]: Becker, B. and Kohavi, R. (1996). Adult. UCI Machine Learning Repository. DOI: https://doi.org/10.24432/C5XW20.306, https://www.kaggle.com/datasets/uciml/adult-census-income.
 
-[2]: Ding, F., Hardt, M., Miller, J., and Schmidt, L. (2021). Retiring adult: New datasets for fair machine311
-learning. In Beygelzimer, A., Dauphin, Y., Liang, P., and Vaughan, J. W., editors, Advances in312
-Neural Information Processing Systems.313, https://github.com/socialfoundations/folktables.
+[2]: Ding, F., Hardt, M., Miller, J., and Schmidt, L. (2021). Retiring adult: New datasets for fair machine learning. In Beygelzimer, A., Dauphin, Y., Liang, P., and Vaughan, J. W., editors, Advances in Neural Information Processing Systems.313, https://github.com/socialfoundations/folktables.
 
-[3]: Jesus, S., Pombal, J., Alves, D., Cruz, A., Saleiro, P., Ribeiro, R. P., Gama, J., and Bizarro, P. (2022).317
-Turning the tables: Biased, imbalanced, dynamic tabular datasets for ml evaluation. In Advances318
-in Neural Information Processing Systems, https://www.kaggle.com/datasets/sgpjesus/bank-account-fraud-dataset-neurips-2022.
+[3]: Jesus, S., Pombal, J., Alves, D., Cruz, A., Saleiro, P., Ribeiro, R. P., Gama, J., and Bizarro, P. (2022). Turning the tables: Biased, imbalanced, dynamic tabular datasets for ml evaluation. In Advances in Neural Information Processing Systems, https://www.kaggle.com/datasets/sgpjesus/bank-account-fraud-dataset-neurips-2022.
 
-[4]: Liu, Ziwei and Luo, Ping and Wang, Xiaogang and Tang, Xiaoou, December 2015, 
-Deep Learning Face Attributes in the Wild, in Proceedings of International Conference on Computer Vision (ICCV)
-https://mmlab.ie.cuhk.edu.hk/projects/CelebA.html or https://www.kaggle.com/datasets/jessicali9530/celeba-dataset
+[4]: Liu, Ziwei and Luo, Ping and Wang, Xiaogang and Tang, Xiaoou, December 2015, Deep Learning Face Attributes in the Wild, in Proceedings of International Conference on Computer Vision (ICCV) https://mmlab.ie.cuhk.edu.hk/projects/CelebA.html or https://www.kaggle.com/datasets/jessicali9530/celeba-dataset
 
-[5]: François Bachoc, Fabrice Gamboa, Max Halford, Jean-Michel Loubes, Laurent Risser, (2023)
-Explaining machine learning models using entropic variable projection
-in Information and Inference: A Journal of the IMA, Volume 12, Pages 1686–1715, https://doi.org/10.1093/imaiai/iaad010
+[5]: François Bachoc, Fabrice Gamboa, Max Halford, Jean-Michel Loubes, Laurent Risser, (2023) Explaining machine learning models using entropic variable projection in Information and Inference: A Journal of the IMA, Volume 12, Pages 1686–1715, https://doi.org/10.1093/imaiai/iaad010
 ```
