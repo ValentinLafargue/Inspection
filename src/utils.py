@@ -4,6 +4,10 @@ from pandas.api.types import is_string_dtype
 import torch
 import torch.nn as nn
 
+from huggingface_hub import PyTorchModelHubMixin, hf_hub_download
+import json
+from safetensors.torch import load_file
+
 
 import math
 #from pandas.api.types import is_numeric_dtype
@@ -39,7 +43,39 @@ class Network_old(nn.Module):
         return prob
     
 
-class Network(nn.Module):
+class Network(nn.Module,
+              PyTorchModelHubMixin,
+              repo_url = "https://huggingface.co/ValentinLAFARGUE/EIF-biased-classifier",
+              license="mit",
+              ):
+    
+    @classmethod
+    def from_pretrained(cls, repo_id, subfolder=None, **kwargs):
+        if subfolder is None:
+            return super().from_pretrained(repo_id, **kwargs)
+
+        config_path = hf_hub_download(
+            repo_id=repo_id,
+            filename="config.json",
+            subfolder=subfolder
+        )
+
+        weights_path = hf_hub_download(
+            repo_id=repo_id,
+            filename="model.safetensors",
+            subfolder=subfolder
+        )
+
+        with open(config_path) as f:
+            config = json.load(f)
+
+        model = cls(**config)
+
+        state_dict = load_file(weights_path)
+        model.load_state_dict(state_dict)
+
+        return model
+        
     def __init__(self, init_column, 
                  activation_bool = False,
                  last_batch_norm = True,
@@ -113,7 +149,6 @@ def training_network_threshold(model,
         model.train()
         optimizer.train()
 
-
         for batch_count in range(math.ceil(len(X_train)//batch_size)):
             optimizer.zero_grad()
             x,y = X_train[(batch_count*batch_size):((batch_count+1)*batch_size)].float(), (Y_train[(batch_count*batch_size):((batch_count+1)*batch_size)] > threshold).float()
@@ -132,17 +167,17 @@ def training_network_threshold(model,
             for batch_count in range(5):
                 x = X_train[(batch_count*batch_size):((batch_count+1)*batch_size)].float()
                 output = model(x)
-        model.eval()
+            model.eval()
 
-        #Test
-        for batch_count in range(math.ceil(len(X_test)//batch_size)):
-            x,y = X_test[(batch_count*batch_size):((batch_count+1)*batch_size)].float(), (Y_test[(batch_count*batch_size):((batch_count+1)*batch_size)] > threshold).float()
-            output = model(x.float())
-            batch_loss =  ((y - output.squeeze())**2).mean() #loss(y, output.squeeze())
-            acc = (1.*(y == (1.*(output.squeeze() > 0.5)))).mean()
+            #Test
+            for batch_count in range(math.ceil(len(X_test)//batch_size)):
+                x,y = X_test[(batch_count*batch_size):((batch_count+1)*batch_size)].float(), (Y_test[(batch_count*batch_size):((batch_count+1)*batch_size)] > threshold).float()
+                output = model(x.float())
+                batch_loss =  ((y - output.squeeze())**2).mean() #loss(y, output.squeeze())
+                acc = (1.*(y == (1.*(output.squeeze() > 0.5)))).mean()
 
-            list_loss_test[epoch-1, batch_count] = batch_loss.item()
-            list_acc_test[epoch-1, batch_count]  = acc.item()
+                list_loss_test[epoch-1, batch_count] = batch_loss.item()
+                list_acc_test[epoch-1, batch_count]  = acc.item()
     return
 
 def training_network_regression(model,
