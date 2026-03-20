@@ -1,7 +1,9 @@
+# Exposing the illusion of fairness: Auditing vulnerabilities to distributional manipulation attacks
+
 This repository includes the code used to generate the result for our paper results. 
 For more information about the methods and the choice we took in their implementation, we invite you to see our paper.
 
-# Install
+## Install
 To reproduce the experiments, you can simply clone this repository and install the requierements in a new virtual env as follows:
 
 ```
@@ -12,14 +14,14 @@ source inspection/bin/activate (or ./inspection/Script/activate given your setup
 pip install -r requirements.txt
 ```
 
-# Datasets
+## Datasets
 In those experiments we use the following datasets:
 - Adult census dataset [1]
 - Folktables : Income, Mobility, Travel Time, Employment, Public Coverage [2]
 - Bank Account Fraud [3]
 - CelebA dataset [4]
 
-# Presentation & Organization 
+## Presentation & Organization 
 
 The github is organised this way : 
 <details>
@@ -63,7 +65,7 @@ contains the datasets in csv which we used, the csv are naturally too heavy for 
 Some of the Results were too heavy for the Github 50Mo limit, hence they are downloadable here: [drive](https://drive.google.com/drive/folders/1LoHXfnelYLZf0b8Dbo3OqqlaKo-51IPY)
 </details>
 
-# References
+## References
 
 ```
 [1]: Becker, B. and Kohavi, R. (1996). Adult. UCI Machine Learning Repository. DOI: https://doi.org/10.24432/C5XW20.306, https://www.kaggle.com/datasets/uciml/adult-census-income.
